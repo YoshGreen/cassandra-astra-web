@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro Concurrente - Cassandra Astra Cloud</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            margin: 0;
+        }
+        .card {
+            background: #1e293b;
+            padding: 28px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            width: 100%;
+            max-width: 500px;
+            border: 1px solid #334155;
+        }
+        h2 { margin-top: 0; color: #38bdf8; }
+        .badge {
+            display: inline-block;
+            background: rgba(56, 189, 248, 0.15);
+            color: #38bdf8;
+            font-size: 12px;
+            padding: 4px 10px;
+            border-radius: 999px;
+            margin-bottom: 16px;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+        }
+        form { display: flex; gap: 10px; margin-bottom: 16px; }
+        input[type="text"] {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #475569;
+            background: #0f172a;
+            color: #fff;
+            font-size: 16px;
+        }
+        button {
+            padding: 12px 20px;
+            background: #0284c7;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button:hover { background: #0369a1; }
+        .alert-success {
+            background-color: rgba(16, 185, 129, 0.15);
+            border: 1px solid #10b981;
+            color: #34d399;
+            padding: 10px 14px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .alert-error {
+            background-color: rgba(239, 68, 68, 0.15);
+            border: 1px solid #ef4444;
+            color: #f87171;
+            padding: 10px 14px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .stats { font-size: 14px; color: #94a3b8; margin-bottom: 12px; }
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        th, td { text-align: left; padding: 10px 8px; border-bottom: 1px solid #334155; }
+        th { color: #38bdf8; }
+        .uuid { font-family: monospace; font-size: 11px; color: #64748b; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Registro en Cassandra</h2>
+        <div class="badge">☁ Conectado a DataStax Astra DB | Keyspace: practica</div>
+
+        <form method="POST" action="/">
+            <input type="text" name="nombre" placeholder="Escribe tu nombre..." required autofocus>
+            <button type="submit">Enviar</button>
+        </form>
+
+        {% if exito %}
+        <div class="alert-success">✔ ¡Éxito! Dato insertado correctamente en Cassandra Cloud.</div>
+        {% endif %}
+
+        {% if error %}
+        <div class="alert-error">✖ Error de conexión: {{ error }}</div>
+        {% endif %}
+
+        <div class="stats">Total registrados en la nube: <strong>{{ usuarios|length }}</strong></div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Fecha / Hora (UTC)</th>
+                    <th>ID (UUID)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for u in usuarios %}
+                <tr>
+                    <td><strong>{{ u.nombre }}</strong></td>
+                    <td>{{ u.fecha }}</td>
+                    <td class="uuid">{{ u.id[:8] }}...</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
